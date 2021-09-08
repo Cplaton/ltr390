@@ -38,6 +38,21 @@
 #endif
 #endif
 
+#if !defined(UINT8_C) && !defined(INT8_C)
+#define INT8_C(x)       S8_C(x)
+#define UINT8_C(x)      U8_C(x)
+#endif
+
+#if !defined(UINT16_C) && !defined(INT16_C)
+#define INT16_C(x)      S16_C(x)
+#define UINT16_C(x)     U16_C(x)
+#endif
+
+#if !defined(INT32_C) && !defined(UINT32_C)
+#define INT32_C(x)      S32_C(x)
+#define UINT32_C(x)     U32_C(x)
+#endif
+
 #ifndef TRUE
 #define TRUE                1
 #endif
@@ -48,16 +63,28 @@
 #define LTR390_CONCAT_BYTES(msb,mid,lsb) \
         ((((uint32_t)msb << 16) | (uint32_t)mid << 8) | (uint32_t)lsb)
 
-#define LTR390_SET_BITS(reg,pos,mask,data) \
-        ((reg & ~(mask)) | ((data << pos) & mask))
+#define LTR390_SET_BITS(reg_data,pos,mask,data) \
+        ((reg_data & ~(mask)) | ((data << pos) & mask))
 
-#define LTR390_GET_BITS(reg,pos,mask) \
-        ((reg & mask)) >> pos
+#define LTR390_GET_BITS(reg_data,pos,mask) \
+        ((reg_data & mask)) >> pos
 
 
 /********************************************************/
 /*                      Consts                          */
 /********************************************************/
+
+/**\name API success code */
+#define LTR390_OK					            INT8_C(0)
+
+/**\name API error codes */
+#define LTR390_E_NULL_PTR			            INT8_C(-1)
+#define LTR390_E_DEV_NOT_FOUND		            INT8_C(-2)
+#define LTR390_E_INVALID_LEN		            INT8_C(-3)
+#define LTR390_E_COMM_FAIL			            INT8_C(-4)
+
+
+#define LTR390_PART_ID                          0x0B
 
 #define LTR390_I2C_ADDR_BASE                    0x53
 
@@ -227,6 +254,8 @@
 #define LTR390_VAL_ALS_UVS_TRIG_INT_16_CONS 	0x0F
 
 
+#define LTR390_INT_SRC_ALS                      0x00
+#define LTR390_INT_SRC_UVS                      0x01
 
 /* Type definitions */
 typedef int8_t (*ltr390_com_fptr_t)(uint8_t dev_id, uint8_t reg_addr, 
