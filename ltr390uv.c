@@ -663,3 +663,10 @@ static int8_t null_ptr_check(const struct ltr390_dev *dev)
 
 	return rslt;
 }
+
+
+/*FOR DEBUG ONLY*/
+int main()
+{
+    return LTR390_OK;
+}
