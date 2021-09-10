@@ -167,7 +167,7 @@ int8_t ltr390_soft_reset( struct ltr390_dev *dev)
     rslt = null_ptr_check(dev);
 	if (rslt == LTR390_OK) {
 		/* Get register value*/
-		rslt = ltr390_get_regs(&reg_addr,&reg_data,1,dev);
+		rslt = ltr390_get_regs(reg_addr,&reg_data,1,dev);
 		if (rslt == LTR390_OK) {
 			/* prepare command to write */
 			uint8_t soft_rst_cmd = LTR390_SET_BITS(reg_data,
@@ -200,7 +200,7 @@ int8_t ltr390_set_mode(uint8_t mode,  struct ltr390_dev *dev)
 			rslt = null_ptr_check(dev);
 			if (rslt == LTR390_OK) {
 				/* Get register value*/
-				rslt = ltr390_get_regs(&reg_addr,&reg_data,1,dev);
+				rslt = ltr390_get_regs(reg_addr,&reg_data,1,dev);
 				if (rslt == LTR390_OK) {
 					/* prepare command to write */
 					uint8_t conf_mode = LTR390_SET_BITS(reg_data,
@@ -239,7 +239,7 @@ int8_t ltr390_set_rate(uint8_t rate,  struct ltr390_dev *dev)
 			rslt = null_ptr_check(dev);
 			if (rslt == LTR390_OK) {
 				/* Get register value*/
-				rslt = ltr390_get_regs(&reg_addr,&reg_data,1,dev);
+				rslt = ltr390_get_regs(reg_addr,&reg_data,1,dev);
 				if (rslt == LTR390_OK) {
 					/* prepare command to write */
 					uint8_t conf_rate = LTR390_SET_BITS(reg_data,
@@ -277,7 +277,7 @@ int8_t ltr390_set_resolution(uint8_t resolution,  struct ltr390_dev *dev)
 			rslt = null_ptr_check(dev);
 			if (rslt == LTR390_OK) {
 				/* Get register value*/
-				rslt = ltr390_get_regs(&reg_addr,&reg_data,1,dev);
+				rslt = ltr390_get_regs(reg_addr,&reg_data,1,dev);
 				if (rslt == LTR390_OK) {
 					/* prepare command to write */
 					uint8_t conf_res = LTR390_SET_BITS(reg_data,
@@ -314,7 +314,7 @@ int8_t ltr390_set_gain(uint8_t gain_range,  struct ltr390_dev *dev)
 			rslt = null_ptr_check(dev);
 			if (rslt == LTR390_OK) {
 				/* Get register value*/
-				rslt = ltr390_get_regs(&reg_addr,&reg_data,1,dev);
+				rslt = ltr390_get_regs(reg_addr,&reg_data,1,dev);
 				if (rslt == LTR390_OK) {
 					/* prepare command to write */
 					uint8_t conf_gain = LTR390_SET_BITS(reg_data,
@@ -348,7 +348,7 @@ int8_t ltr390_set_int(uint8_t int_enabled,  struct ltr390_dev *dev)
 			rslt = null_ptr_check(dev);
 			if (rslt == LTR390_OK) {
 				/* Get register value*/
-				rslt = ltr390_get_regs(&reg_addr,&reg_data,1,dev);
+				rslt = ltr390_get_regs(reg_addr,&reg_data,1,dev);
 				if (rslt == LTR390_OK) {
 					/* prepare command to write */
 					uint8_t conf_int = LTR390_SET_BITS(reg_data,
@@ -382,7 +382,7 @@ int8_t ltr390_set_int_src(uint8_t int_src,  struct ltr390_dev *dev)
 			rslt = null_ptr_check(dev);
 			if (rslt == LTR390_OK) {
 				/* Get register value*/
-				rslt = ltr390_get_regs(&reg_addr,&reg_data,1,dev);
+				rslt = ltr390_get_regs(reg_addr,&reg_data,1,dev);
 				if (rslt == LTR390_OK) {
 					/* prepare command to write */
 					uint8_t conf_int_src = LTR390_SET_BITS(reg_data,
@@ -430,7 +430,7 @@ int8_t ltr390_set_int_pers(uint8_t int_pers,  struct ltr390_dev *dev)
 			rslt = null_ptr_check(dev);
 			if (rslt == LTR390_OK) {
 				/* Get register value*/
-				rslt = ltr390_get_regs(&reg_addr,&reg_data,1,dev);
+				rslt = ltr390_get_regs(reg_addr,&reg_data,1,dev);
 				if (rslt == LTR390_OK) {
 					/* prepare command to write */
 					uint8_t conf_int_pers = LTR390_SET_BITS(reg_data,
@@ -570,9 +570,7 @@ int8_t ltr390_computed_data(uint32_t raw_data, double *computed_data,  struct lt
 static int8_t get_als_data(uint32_t *data,  struct ltr390_dev *dev)
 {
 	int8_t rslt;
-    uint8_t reg_addr[3] = {LTR390_REG_ALS_DATA_0,
-				LTR390_REG_ALS_DATA_1,
-				LTR390_REG_ALS_DATA_2};
+    uint8_t reg_addr = LTR390_REG_ALS_DATA_0;
 	uint8_t reg_data[3]={0};
 
 	/* Check for null pointer in the device structure*/
@@ -611,16 +609,14 @@ static int8_t get_als_data(uint32_t *data,  struct ltr390_dev *dev)
 static int8_t get_uvs_data(uint32_t *data,  struct ltr390_dev *dev)
 {
 	int8_t rslt;
-    uint8_t reg_addr[3] = {LTR390_REG_UVS_DATA_0,
-				LTR390_REG_UVS_DATA_1,
-				LTR390_REG_UVS_DATA_2};
+    uint8_t reg_addr= LTR390_REG_UVS_DATA_0;
 	uint8_t reg_data[3]={0};
 
 	/* Check for null pointer in the device structure*/
     rslt = null_ptr_check(dev);
 	if (rslt == LTR390_OK) {
 		/* Get register value*/
-		rslt = ltr390_get_regs(reg_addr,&reg_data,3,dev);
+		rslt = ltr390_get_regs(reg_addr,reg_data,3,dev);
 		if (rslt == LTR390_OK) {
 			switch(dev->settings.resolution)
 			{
