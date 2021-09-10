@@ -469,7 +469,7 @@ int8_t ltr390_set_thresh_low(uint32_t int_thresh_low, const struct ltr390_dev *d
 									LTR390_MASK_ALS_UVS_THRES_LOW_0,
 									LTR390_GET_LSB(int_thresh_low));
 			/* Write the soft reset command in the sensor */
-			rslt = ltr390_set_regs(&reg_addr, &conf_thresh_low, 3, dev);
+			rslt = ltr390_set_regs(reg_addr, conf_thresh_low, 3, dev);
 
 			conf_thresh_low[1] = LTR390_SET_BITS(reg_data[1],
 									LTR390_POS_ALS_UVS_THRES_LOW_0,
@@ -516,7 +516,7 @@ int8_t ltr390_set_thresh_up(uint32_t int_thresh_up, const struct ltr390_dev *dev
 									LTR390_MASK_ALS_UVS_THRES_UP_0,
 									LTR390_GET_MSB(int_thresh_up));
 			/* Write the soft reset command in the sensor */
-			rslt = ltr390_set_regs(&reg_addr, &conf_thresh_up, 3, dev);
+			rslt = ltr390_set_regs(reg_addr, conf_thresh_up, 3, dev);
 		}
 	}
 
@@ -579,7 +579,7 @@ static int8_t get_als_data(uint32_t *data, const struct ltr390_dev *dev)
     rslt = null_ptr_check(dev);
 	if (rslt == LTR390_OK) {
 		/* Get register value*/
-		rslt = ltr390_get_regs(&reg_addr,&reg_data,3,dev);
+		rslt = ltr390_get_regs(reg_addr,&reg_data,3,dev);
 		if (rslt == LTR390_OK) {
 			switch(dev->settings.resolution)
 			{
@@ -620,7 +620,7 @@ static int8_t get_uvs_data(uint32_t *data, const struct ltr390_dev *dev)
     rslt = null_ptr_check(dev);
 	if (rslt == LTR390_OK) {
 		/* Get register value*/
-		rslt = ltr390_get_regs(&reg_addr,&reg_data,3,dev);
+		rslt = ltr390_get_regs(reg_addr,&reg_data,3,dev);
 		if (rslt == LTR390_OK) {
 			switch(dev->settings.resolution)
 			{
