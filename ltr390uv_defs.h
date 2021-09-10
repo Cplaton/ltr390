@@ -38,21 +38,6 @@
 #endif
 #endif
 
-#if !defined(UINT8_C) && !defined(INT8_C)
-#define INT8_C(x)       S8_C(x)
-#define UINT8_C(x)      U8_C(x)
-#endif
-
-#if !defined(UINT16_C) && !defined(INT16_C)
-#define INT16_C(x)      S16_C(x)
-#define UINT16_C(x)     U16_C(x)
-#endif
-
-#if !defined(INT32_C) && !defined(UINT32_C)
-#define INT32_C(x)      S32_C(x)
-#define UINT32_C(x)     U32_C(x)
-#endif
-
 #ifndef TRUE
 #define TRUE                1
 #endif
@@ -62,6 +47,15 @@
 
 #define LTR390_CONCAT_BYTES(msb,mid,lsb) \
         ((((uint32_t)msb << 16) | (uint32_t)mid << 8) | (uint32_t)lsb)
+
+#define LTR390_GET_MSB(buf) \
+        (uint8_t)((buf>>16) & 0x0F)
+
+#define LTR390_GET_MID(buf) \
+        (uint8_t)((buf>>8) & 0xFF)
+
+#define LTR390_GET_LSB(buf) \
+        (uint8_t)(buf & 0xFF)                
 
 #define LTR390_SET_BITS(reg_data,pos,mask,data) \
         ((reg_data & ~(mask)) | ((data << pos) & mask))
@@ -75,13 +69,14 @@
 /********************************************************/
 
 /**\name API success code */
-#define LTR390_OK					            INT8_C(0)
+#define LTR390_OK				INT8_C(0)
 
 /**\name API error codes */
-#define LTR390_E_NULL_PTR			            INT8_C(-1)
-#define LTR390_E_DEV_NOT_FOUND		            INT8_C(-2)
-#define LTR390_E_INVALID_LEN		            INT8_C(-3)
-#define LTR390_E_COMM_FAIL			            INT8_C(-4)
+#define LTR390_E_NULL_PTR			INT8_C(-1)
+#define LTR390_E_DEV_NOT_FOUND		        INT8_C(-2)
+#define LTR390_E_INVALID_LEN		        INT8_C(-3)
+#define LTR390_E_COMM_FAIL			INT8_C(-4)
+#define LTR390_E_INVALID_VAL			INT8_C(-5)
 
 
 #define LTR390_PART_ID                          0x0B
@@ -111,6 +106,46 @@
 #define LTR390_REG_ALS_UVS_THRES_LOW_0          0x24
 #define LTR390_REG_ALS_UVS_THRES_LOW_1          0x25
 #define LTR390_REG_ALS_UVS_THRES_LOW_2          0x26
+
+
+
+/* Positions */
+#define LTR390_POS_ALS_UVS_EN                   0x01
+#define LTR390_POS_UVS_MODE                     0x03
+#define LTR390_POS_SOFT_RST                     0x04
+
+#define LTR390_POS_ALS_UVS_MEAS_RATE            0x00
+#define LTR390_POS_ALS_UVS_RES                  0x04
+
+#define LTR390_POS_ALS_UVS_GAIN_RANGE           0x00
+
+#define LTR390_POS_REV_ID                       0x00
+#define LTR390_POS_PART_ID                      0x04
+
+#define LTR390_POS_ALS_UVS_DATA_STAT            0x03
+#define LTR390_POS_ALS_UVS_INT_STAT             0x04
+#define LTR390_POS_ALS_UVS_PWR_ON_STAT          0x05
+
+#define LTR390_POS_ALS_DATA_0                   0x00
+#define LTR390_POS_ALS_DATA_1                   0x00
+#define LTR390_POS_ALS_DATA_2                   0x00
+
+#define LTR390_POS_UVS_DATA_0                   0x00
+#define LTR390_POS_UVS_DATA_1                   0x00
+#define LTR390_POS_UVS_DATA_2                   0x00
+
+#define LTR390_POS_LS_INT_EN                    0x02
+#define LTR390_POS_LS_INT_SEL                   0x04
+
+#define LTR390_POS_ALS_UVS_PERSIST              0x04
+
+#define LTR390_POS_ALS_UVS_THRES_UP_0          0x00
+#define LTR390_POS_ALS_UVS_THRES_UP_1          0x00
+#define LTR390_POS_ALS_UVS_THRES_UP_2          0x00
+
+#define LTR390_POS_ALS_UVS_THRES_LOW_0          0x00
+#define LTR390_POS_ALS_UVS_THRES_LOW_1          0x00
+#define LTR390_POS_ALS_UVS_THRES_LOW_2          0x00
 
 
 
@@ -151,42 +186,6 @@
 #define LTR390_MASK_ALS_UVS_THRES_LOW_0         0xFF
 #define LTR390_MASK_ALS_UVS_THRES_LOW_1         0xFF
 #define LTR390_MASK_ALS_UVS_THRES_LOW_2         0x0F
-
-
-
-/* Positions */
-#define LTR390_POS_ALS_UVS_EN                   0x01
-#define LTR390_POS_UVS_MODE                     0x03
-#define LTR390_POS_SOFT_RST                     0x04
-
-#define LTR390_POS_ALS_UVS_MEAS_RATE            0x00
-#define LTR390_POS_ALS_UVS_RES                  0x04
-
-#define LTR390_POS_ALS_UVS_GAIN_RANGE           0x00
-
-#define LTR390_POS_REV_ID                       0x00
-#define LTR390_POS_PART_ID                      0x04
-
-#define LTR390_POS_ALS_UVS_DATA_STAT            0x03
-#define LTR390_POS_ALS_UVS_INT_STAT             0x04
-#define LTR390_POS_ALS_UVS_PWR_ON_STAT          0x05
-
-#define LTR390_POS_ALS_DATA_0                   0x00
-#define LTR390_POS_ALS_DATA_1                   0x00
-#define LTR390_POS_ALS_DATA_2                   0x00
-
-#define LTR390_POS_UVS_DATA_0                   0x00
-#define LTR390_POS_UVS_DATA_1                   0x00
-#define LTR390_POS_UVS_DATA_2                   0x00
-
-#define LTR390_POS_LS_INT_EN                    0x02
-#define LTR390_POS_LS_INT_SEL                   0x04
-
-#define LTR390_POS_ALS_UVS_PERSIST              0x04
-
-#define LTR390_POS_ALS_UVS_THRES_LOW_0          0x00
-#define LTR390_POS_ALS_UVS_THRES_LOW_1          0x00
-#define LTR390_POS_ALS_UVS_THRES_LOW_2          0x00
 
 
 
@@ -257,6 +256,13 @@
 #define LTR390_INT_SRC_ALS                      0x00
 #define LTR390_INT_SRC_UVS                      0x01
 
+#define LTR390_UVS_SENSITIVITY                  UINT8_C(2300)
+#define LTR390_UVS_WFAC_NO_WINDOW               UINT8_C(0)
+
+uint8_t a_gain[5] = {1,3,6,9,18};
+
+double a_int[6] = {4.,2.,1.,0.5,0.25,0.25};
+
 /* Type definitions */
 typedef int8_t (*ltr390_com_fptr_t)(uint8_t dev_id, uint8_t reg_addr, 
         uint8_t *data, uint16_t len);
@@ -282,14 +288,18 @@ struct ltr390_settings {
     uint32_t int_thresh_low;
     /* Interrupt threshold up */
     uint32_t int_thresh_up;
+    /* Interrupt source */
+    uint8_t uv_sensitivity;
+    /* Interrupt persist */
+    uint8_t w_fac;
 };
 
 /* ltr390 device structure */
 struct ltr390_dev {
+    /* device Id (base adress) */    
+    uint8_t dev_id;
     /* Part Number Id */
     uint8_t part_id;
-    /* Revision Id */
-    uint8_t rev_id;
     /* Read function pointer */
     ltr390_com_fptr_t read;
     /* Write function pointer */

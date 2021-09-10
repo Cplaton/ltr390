@@ -25,10 +25,36 @@
 
 /********************************************************/
 
-int8_t ltr390_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint16_t len, const struct ltr390_dev *dev);
+int8_t ltr390_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint8_t len, const struct ltr390_dev *dev);
 
 int8_t ltr390_set_regs(uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len, const struct ltr390_dev *dev);
 
+int8_t ltr390_init(struct ltr390_dev *dev);
+
+int8_t ltr390_configure(struct ltr390_dev *dev);
+
 int8_t ltr390_soft_reset(const struct ltr390_dev *dev);
+
+int8_t ltr390_set_mode(uint8_t mode, const struct ltr390_dev *dev);
+
+int8_t ltr390_set_rate(uint8_t rate, const struct ltr390_dev *dev);
+
+int8_t ltr390_set_resolution(uint8_t resolution, const struct ltr390_dev *dev);
+
+int8_t ltr390_set_gain(uint8_t gain_range, const struct ltr390_dev *dev);
+
+int8_t ltr390_set_int(uint8_t int_enabled, const struct ltr390_dev *dev);
+
+int8_t ltr390_set_int_src(uint8_t int_src, const struct ltr390_dev *dev);
+
+int8_t ltr390_set_int_pers(uint8_t int_pers, const struct ltr390_dev *dev);
+
+int8_t ltr390_set_thresh_low(uint32_t int_thresh_low, const struct ltr390_dev *dev);
+
+int8_t ltr390_set_thresh_up(uint32_t int_thresh_up, const struct ltr390_dev *dev);
+
+int8_t ltr390_get_raw_data(uint32_t *data, const struct ltr390_dev *dev);
+
+int8_t ltr390_computed_data(uint32_t raw_data, double *computed_data, const struct ltr390_dev *dev);
 
 #endif /* LTR390_H_ */ 
