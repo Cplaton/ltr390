@@ -14,4 +14,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: make
-      run: gcc -o ltr390 -Wall ltr390_application.c
+      run: gcc -o ltr390 -Wall ltr390uv.c
