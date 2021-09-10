@@ -109,37 +109,8 @@ int8_t ltr390_configure(struct ltr390_dev *dev)
 	
 }
 
-int8_t ltr390_configure(struct ltr390_dev *dev)
-{
-	int8_t rslt;
-	/* chip id read try count */
-	uint8_t try_count = 5;
-	uint8_t part_id = 0;
 
-	/* Check for null pointer in the device structure*/
-	rslt = null_ptr_check(dev);
-	/* Proceed if null check is fine */
-	if (rslt ==  LTR390_OK) {
-		while (try_count) {
-			/* Read the part id of sensor */
-			rslt = ltr390_get_regs(LTR390_REG_PART_ID, &part_id, 1, dev);
-			/* Check for part id validity */
-			if ((rslt == LTR390_OK) && (part_id == LTR390_PART_ID)) {
-				dev->part_id = part_id;
-				/* Reset the sensor */
-				rslt = ltr390_soft_reset(dev);
-				break;
-			}
-		}
-		/* Chip part id check failed */
-		if (!try_count)
-			rslt = LTR390_E_DEV_NOT_FOUND;
-	}
-
-	return rslt;
-}
-
-int8_t ltr390_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint8_t len, const struct ltr390_dev *dev)
+int8_t ltr390_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint8_t len, struct ltr390_dev *dev)
 {
 	int8_t rslt;
 
@@ -158,15 +129,12 @@ int8_t ltr390_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint8_t len, const s
 }
 
 
-int8_t ltr390_set_regs(uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len, const struct ltr390_dev *dev)
+int8_t ltr390_set_regs(uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len, struct ltr390_dev *dev)
 {
 	int8_t rslt;
 
 	if (len > 3) /* Typically not to write more than 3 registers */
 		len = 3;
-
-	uint16_t temp_len;
-	uint8_t reg_addr_cnt;
 
 	/* Check for null pointer in the device structure*/
 	rslt = null_ptr_check(dev);
@@ -616,19 +584,19 @@ static int8_t get_als_data(uint32_t *data, const struct ltr390_dev *dev)
 			switch(dev->settings.resolution)
 			{
 				case LTR390_VAL_RES_13_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[1]<<8)&0x1F00)|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[1]<<8)&0x1F00)|(uint32_t)reg_data[0]);
 					break;
 				case LTR390_VAL_RES_16_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 				case LTR390_VAL_RES_17_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x10000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x10000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 				case LTR390_VAL_RES_18_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x30000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x30000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 				case LTR390_VAL_RES_19_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x70000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x70000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 				default:
 					data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0xF0000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
@@ -657,22 +625,22 @@ static int8_t get_uvs_data(uint32_t *data, const struct ltr390_dev *dev)
 			switch(dev->settings.resolution)
 			{
 				case LTR390_VAL_RES_13_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[1]<<8)&0x1F00)|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[1]<<8)&0x1F00)|(uint32_t)reg_data[0]);
 					break;
 				case LTR390_VAL_RES_16_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 				case LTR390_VAL_RES_17_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x10000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x10000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 				case LTR390_VAL_RES_18_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x30000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x30000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 				case LTR390_VAL_RES_19_BIT:
-					data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x70000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x70000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 				default:
-					data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0xF0000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0xF0000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 			}
 		}

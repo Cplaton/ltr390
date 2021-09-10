@@ -25,9 +25,9 @@
 
 /********************************************************/
 
-int8_t ltr390_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint8_t len, const struct ltr390_dev *dev);
+int8_t ltr390_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint8_t len, struct ltr390_dev *dev);
 
-int8_t ltr390_set_regs(uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len, const struct ltr390_dev *dev);
+int8_t ltr390_set_regs(uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len, struct ltr390_dev *dev);
 
 int8_t ltr390_init(struct ltr390_dev *dev);
 
