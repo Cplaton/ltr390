@@ -534,7 +534,7 @@ int8_t ltr390_get_raw_data(uint32_t *data,  struct ltr390_dev *dev)
 			break;
 
 		case LTR390_VAL_UVS_MODE_UVS:
-			rslt=get_uvs_data(*data, dev);
+			rslt=get_uvs_data(data, dev);
 			break;
 		
 		default:
@@ -577,7 +577,7 @@ static int8_t get_als_data(uint32_t *data,  struct ltr390_dev *dev)
     rslt = null_ptr_check(dev);
 	if (rslt == LTR390_OK) {
 		/* Get register value*/
-		rslt = ltr390_get_regs(reg_addr,&reg_data,3,dev);
+		rslt = ltr390_get_regs(reg_addr,reg_data,3,dev);
 		if (rslt == LTR390_OK) {
 			switch(dev->settings.resolution)
 			{
@@ -597,7 +597,7 @@ static int8_t get_als_data(uint32_t *data,  struct ltr390_dev *dev)
 					*data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0x70000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 				default:
-					data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0xF0000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
+					*data=(uint32_t)(((uint32_t)(reg_data[2]<<16)&0xF0000)|((uint32_t)(reg_data[1]<<8))|(uint32_t)reg_data[0]);
 					break;
 			}
 		}
